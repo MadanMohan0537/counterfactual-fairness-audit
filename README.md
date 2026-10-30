@@ -1,6 +1,6 @@
 # ParityProbe
 
-[![CI](https://github.com/MadanMohan0537/parityprobe/actions/workflows/ci.yml/badge.svg)](https://github.com/MadanMohan0537/parityprobe/actions/workflows/ci.yml)
+[![CI](https://github.com/MadanMohan0537/counterfactual-fairness-audit/actions/workflows/ci.yml/badge.svg)](https://github.com/MadanMohan0537/counterfactual-fairness-audit/actions/workflows/ci.yml)
 
 ParityProbe is a reproducible counterfactual fairness-audit workbench. It generates paired candidate records, verifies that swaps preserve task-relevant facts, measures decision flips and score gaps with uncertainty, and compares a mitigation against both fairness and task accuracy.
 
@@ -16,6 +16,7 @@ ParityProbe is a reproducible counterfactual fairness-audit workbench. It genera
 - Mitigation comparison across fairness and accuracy.
 - JSON and standalone HTML reviewer reports.
 - **P1 counterfactual validity audit:** visible edited fields, invariant enforcement, linked-field consistency checks, and rejection before scoring.
+- **P2 intersection coverage planner:** intersection denominators, Wilson uncertainty intervals, exact sample gaps, and explicit suppression of under-covered conclusions.
 
 Real-person data, real demographic inference, legal conclusions, causal claims, hosted UI, and external-model credentials are intentionally excluded.
 
@@ -49,6 +50,8 @@ The frozen fixture contains a seeded name-group effect and a regional proxy effe
 
 The P1 validity fixture includes four valid pairs and four invalid pairs: an invariant qualification change, inconsistent linked name fields, inconsistent zip/region fields, and a false edit declaration. Acceptance was set before execution: detect all invalid pairs and reject none of the valid controls.
 
+The P2 coverage fixture contains a 12-pair well-covered control cell and a six-pair intersection with a seeded flip signal. Its predeclared acceptance test requires all denominators to reconcile, the sparse signal to remain visible, its conclusion to be suppressed, and the planner to recommend exactly six more cases. The minimum is a workflow policy, not a statistical power guarantee.
+
 Results are a workflow demonstration, not evidence about a real model or population. See the [method and limitations](docs/METHOD.md).
 
 ## Responsible interpretation
@@ -60,8 +63,9 @@ Results are a workflow demonstration, not evidence about a real model or populat
 
 ## Roadmap
 
-The next priority is an intersection coverage planner that makes sparse sample sizes and unsupported conclusions explicit. The [rigorous backlog](docs/BACKLOG.md) documents the concrete user problem, behavior, dependencies, acceptance test, risks, and status of each extension.
+The next priority is a mitigation utility frontier that catches parity improvements achieved through indiscriminate rejection. The [rigorous backlog](docs/BACKLOG.md) documents the concrete user problem, behavior, dependencies, acceptance test, risks, and status of each extension.
 
 ## License
 
 MIT
+

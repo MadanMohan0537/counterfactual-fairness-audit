@@ -2,7 +2,8 @@ from __future__ import annotations
 
 from .counterfactuals import suite
 from .data import candidates
-from .fixtures import validity_fixture
+from .fixtures import intersection_fixture, validity_fixture
+from .intersections import plan_intersection_coverage
 from .metrics import accuracy, pair_outcomes, summarize
 from .validity import audit, filter_valid
 
@@ -29,4 +30,6 @@ def run_demo() -> dict:
         "dataset": {"synthetic_candidates": len(records), "counterfactual_pairs": len(pairs), "rejected_generated_pairs": sum(not item.valid for item in validity)},
         "models": models,
         "validity": {"fixture_cases": len(fixture), "invalid_fixture": invalid, "detected_invalid": detected, "false_positives": false_positives, "results": [{"pair_id": result.pair_id, "expected_valid": expected, "actual_valid": result.valid, "violations": result.violations, "edited_fields": result.edited_fields} for result, expected in results]},
+        "intersection_coverage": plan_intersection_coverage(intersection_fixture()),
     }
+

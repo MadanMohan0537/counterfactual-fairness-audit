@@ -3,7 +3,7 @@
 | Priority | Feature | User problem and behavior | Dependencies | Success test | Risks and tradeoffs | Status |
 |---|---|---|---|---|---|---|
 | P1 | Counterfactual validity audit | Invalid swaps silently change qualifications or create inconsistent records. Show actual edits, enforce invariants, and reject inconsistent pairs before scoring. | Typed records, linked-field rules | Detect all four labeled invalid cases with zero false rejections on four valid controls | Social correlation is difficult to isolate; disclose assumptions | Shipped |
-| P2 | Intersection coverage planner | Aggregate metrics hide small intersections. Show group counts, interval width, and suggested cases without asserting unsupported conclusions. | Intersection schema, power targets | Surface a seeded intersection disparity and suppress underpowered verdicts | Sparse groups create unstable estimates | Planned |
+| P2 | Intersection coverage planner | Aggregate metrics hide small intersections. Show group counts, Wilson uncertainty, and exact case gaps while suppressing conclusions below a predeclared minimum. | Valid paired outcomes, fixed two-field intersection schema | Seeded six-pair signal remains visible but unsupported; asks for exactly six cases; all denominators reconcile | The 12-pair rule is not a power guarantee; correlated pairs and multiplicity remain | **Shipped** |
 | P2 | Mitigation utility frontier | A fairness improvement may lower task performance or shift harm. Compare fairness, accuracy, abstention, and review load across mitigations. | Labeled utility set, cost weights | Reject a seeded mitigation that improves parity by refusing everyone | Accuracy labels may encode historic bias | Planned |
 | P2 | Reviewer disagreement log | Domain reviewers disagree on whether a proxy swap is valid. Preserve both judgments and rationales. | Reviewer identities, immutable revisions | Measure agreement and prevent unresolved pairs from entering headline metrics | Additional review burden | Planned |
 | P2 | Multiple-comparison control | Testing many attributes creates chance findings. Report adjusted intervals or false-discovery controls beside exploratory results. | Hypothesis registry, correction method | Flag seeded null tests at the predeclared family error rate | Conservative correction can hide real harms | Planned |
@@ -13,4 +13,13 @@
 | P3 | Threshold governance registry | Teams move decision thresholds after an audit. Version thresholds, owners, rationale, and impact. | Decision registry, approval log | Reproduce every published metric from a versioned threshold | Governance can become checkbox theater | Planned |
 | P4 | Ongoing outcome reconciliation | Counterfactual tests miss population-level allocation harm. Compare live, consented outcomes with audit predictions and drift alerts. | Privacy review, monitoring, causal caveats | Detect seeded divergence with explicit denominators | High privacy and interpretation risk | Planned |
 
-Next slice: intersection coverage planning, because a clean aggregate can hide a concentrated harm while sparse samples invite overclaiming.
+## Newly evaluated extensions
+
+| Priority | Feature | User problem and behavior | Dependencies | Success test | Risks and tradeoffs | Status |
+|---|---|---|---|---|---|---|
+| P2 | Coverage-aware audit queue | Teams know a cell is sparse but not which reviewed cases would close the gap. Rank synthetic or consented cases by coverage gain without inventing protected labels. | Coverage planner, lawful sampling source | Top-ranked batch closes the largest declared gaps and never fabricates attributes | Targeted collection can increase privacy burden or sampling bias | Planned |
+| P3 | Sequential evidence guard | Rechecking after every new case inflates false positives. Lock review checkpoints and distinguish exploratory from confirmatory reads. | Versioned audit plan, alpha-spending method | Seeded null simulation stays within the declared false-positive budget | More conservative and harder to explain | Planned |
+| P3 | Intersection stability replay | A single split can make a sparse signal look dramatic. Replay bounded resamples and label sign/threshold instability. | Deterministic resampling, saved seeds | Unstable fixture is labeled unstable across repeated runs | Resampling cannot repair biased collection | Planned |
+
+Next slice: mitigation utility frontier, because a parity metric can improve when a policy simply rejects everyone. It should compare fairness, accuracy, abstention, and review load and reject that seeded failure mode.
+

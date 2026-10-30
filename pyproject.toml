@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "parityprobe"
-version = "0.1.0"
-description = "Counterfactual fairness audits with uncertainty and validity checks"
+version = "0.2.0"
+description = "Counterfactual fairness audits with validity and intersection coverage checks"
 readme = "README.md"
 requires-python = ">=3.11"
 license = {text = "MIT"}
@@ -17,3 +17,4 @@ parityprobe = "parityprobe.cli:main"
 
 [tool.setuptools.packages.find]
 include = ["parityprobe*"]
+

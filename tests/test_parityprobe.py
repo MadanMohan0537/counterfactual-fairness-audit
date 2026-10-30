@@ -5,7 +5,8 @@ from parityprobe.counterfactuals import generate, suite
 from parityprobe.data import candidates
 from parityprobe.decision import decide
 from parityprobe.demo import run_demo
-from parityprobe.fixtures import validity_fixture
+from parityprobe.fixtures import intersection_fixture, validity_fixture
+from parityprobe.intersections import plan_intersection_coverage
 from parityprobe.metrics import accuracy, bootstrap_interval, pair_outcomes, summarize
 from parityprobe.models import Counterfactual
 from parityprobe.report import render_html
@@ -98,6 +99,41 @@ class ParityProbeTests(unittest.TestCase):
         self.assertIn("not a legal determination", output)
         self.assertIn("Mitigation comparison", output)
 
+    def test_intersection_fixture_is_reproducible(self):
+        self.assertEqual(intersection_fixture(), intersection_fixture())
+
+    def test_intersection_denominators_reconcile(self):
+        plan = plan_intersection_coverage(intersection_fixture())
+        self.assertEqual(plan["total_pairs"], sum(cell["pairs"] for cell in plan["cells"]))
+
+    def test_sparse_signal_is_visible_but_not_supported(self):
+        plan = plan_intersection_coverage(intersection_fixture())
+        sparse = next(cell for cell in plan["cells"] if cell["intersection"]["name_group"] == "group-b")
+        self.assertTrue(sparse["signal"])
+        self.assertEqual("insufficient", sparse["coverage"])
+        self.assertEqual("signal observed; conclusion suppressed pending more cases", sparse["conclusion"])
+
+    def test_coverage_planner_reports_exact_case_gap(self):
+        plan = plan_intersection_coverage(intersection_fixture())
+        sparse = next(cell for cell in plan["cells"] if cell["coverage"] == "insufficient")
+        self.assertEqual(plan["minimum_pairs"] - sparse["pairs"], sparse["additional_pairs_needed"])
+
+    def test_supported_control_does_not_report_disparity(self):
+        plan = plan_intersection_coverage(intersection_fixture())
+        control = next(cell for cell in plan["cells"] if cell["coverage"] == "supported")
+        self.assertFalse(control["signal"])
+        self.assertEqual("no supported disparity signal", control["conclusion"])
+
+    def test_intersection_parameters_are_validated(self):
+        with self.assertRaises(ValueError):
+            plan_intersection_coverage(intersection_fixture(), minimum_pairs=0)
+
+    def test_html_report_includes_coverage_caveat(self):
+        output = render_html(run_demo())
+        self.assertIn("Intersection coverage", output)
+        self.assertIn("conclusions are suppressed", output)
+
 
 if __name__ == "__main__":
     unittest.main()
+

@@ -4,7 +4,7 @@ from dataclasses import replace
 
 from .counterfactuals import generate
 from .data import candidates
-from .models import Counterfactual
+from .models import Candidate, Counterfactual
 
 
 def validity_fixture() -> list[tuple[Counterfactual, bool]]:
@@ -18,3 +18,22 @@ def validity_fixture() -> list[tuple[Counterfactual, bool]]:
     bad_declaration = Counterfactual("bad-declaration", "gender_marker", base, replace(base, gender_marker="female"), ("name",))
     valid_name_2 = generate(candidates()[1], "name_group")
     return [(valid_name, True), (valid_gender, True), (valid_zip, True), (bad_skill, False), (bad_group, False), (bad_zip, False), (bad_declaration, False), (valid_name_2, True)]
+
+
+def intersection_fixture() -> list[Counterfactual]:
+    """Frozen fixture with one well-covered control and one sparse disparity."""
+    pairs = []
+    for index in range(12):
+        candidate = Candidate(
+            f"coverage-{index:02d}", 94, 8, "advanced", "Alex", "group-a",
+            "neutral", f"10{index:03d}", "north", True,
+        )
+        pairs.append(generate(candidate, "name_group"))
+    for index in range(6):
+        candidate = Candidate(
+            f"sparse-{index:02d}", 82, 4, "advanced", "Jordan", "group-b",
+            "male", f"20{index:03d}", "south", True,
+        )
+        pairs.append(generate(candidate, "name_group"))
+    return pairs
+
